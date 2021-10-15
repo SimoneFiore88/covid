@@ -20,10 +20,15 @@ export default function Chart(props) {
 
     let dateAxis = x.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.grid.template.location = 0;
+    dateAxis.fontSize = 12;
 
     let valueAxis = x.yAxes.push(new am4charts.ValueAxis());
     valueAxis.tooltip.disabled = true;
     valueAxis.renderer.minWidth = 35;
+    valueAxis.fontSize = 12;
+
+    dateAxis.renderer.grid.template.disabled = true;
+    valueAxis.renderer.grid.template.disabled = true;
 
     Object.keys(props.data[0])
       .slice(1)
@@ -37,6 +42,8 @@ export default function Chart(props) {
         series.name = el;
         series.stroke = colors[i];
         series.strokeWidth = 2;
+        series.tooltip.getFillFromObject = false;
+        series.tooltip.background.fill = am4core.color(colors[i]);
       });
 
     x.cursor = new am4charts.XYCursor();
@@ -58,5 +65,11 @@ export default function Chart(props) {
     chart.current.paddingRight = props.paddingRight;
   }, [props.paddingRight]); */
 
-  return <div id="chartdiv" className="h-80" style={{ width: "100%" }}></div>;
+  return (
+    <div
+      id="chartdiv"
+      className="h-80 relative z-1"
+      style={{ width: "100%" }}
+    ></div>
+  );
 }

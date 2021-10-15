@@ -12,6 +12,7 @@ function App() {
   const [dateUpdate, setDateUpdate] = useState();
 
   const [toPlot, setToPlot] = useState();
+  const [toPositivePie, setToPositivePie] = useState();
   const [regions, setRegions] = useState();
 
   useEffect(() => {
@@ -41,12 +42,44 @@ function App() {
           return {
             data: new Date(el.data),
             "T. Intensiva": el.terapia_intensiva,
-            "Nuovi Positivi": el.nuovi_positivi,
-            "Delta Positivi": el.variazione_totale_positivi,
+            //"Nuovi Positivi": el.nuovi_positivi,
+            //"Delta Positivi": el.variazione_totale_positivi,
+            //Guariti: el.dimessi_guariti,
+            Deceduti: el.deceduti,
+            "Totale Positivi": el.totale_positivi,
           };
         });
 
         setToPlot(toP);
+
+        const pie = [
+          {
+            label: "Terapia",
+            value: el.terapia_intensiva,
+          },
+          {
+            label: "Isolamento",
+            value: el.isolamento_domiciliare,
+          },
+          {
+            label: "Ricoverati",
+            value: el.ricoverati_con_sintomi,
+          },
+        ];
+
+        setToPositivePie(pie);
+        console.log(el, "PIE");
+
+        /* const dataGenre = [
+  {
+      "label": "Maschi",
+      "value": entries.filter(el => el.genre === "M").length
+  },
+  {
+      "label": "Femine",
+      "value": entries.filter(el => el.genre === "F").length
+  }        
+] */
       });
   }, []);
 
@@ -67,26 +100,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-blue">
-      <Header dateUpdate={dateUpdate} latest={latest} />
-
       <Router basename={process.env.PUBLIC_URL}>
-        <div className="w-screen px-5 lg:px-20 pt-4">
+        <Header dateUpdate={dateUpdate} latest={latest} regions={regions} />
+
+        <div className="w-screen">
           <div className="flex flex-wrap ">
-            <div className="w-full lg:w-1/6  px-4 py-2 rounded-md shadow-xl backdrop-filter backdrop-blur-xl mb-10">
-              <div className="h-36 lg:h-80 overflow-scroll">
-                {regions &&
-                  regions.map((el) => {
-                    return (
-                      <p key={el}>
-                        <Link to={`/region/${el}`}>{el}</Link>
-                      </p>
-                    );
-                  })}
-              </div>
-            </div>
             <Switch>
               <Route exact path="/">
-                <Home toPlot={toPlot} />
+                <Home toPlot={toPlot} toPositivePie={toPositivePie} />
               </Route>
               <Route path="/region/:region">
                 <Region />
